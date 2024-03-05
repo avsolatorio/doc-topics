@@ -148,7 +148,11 @@ def run_chain(topics, alpha):
     with open(raw_fname, "w") as f:
         f.write(message.json())
 
-    alpha = process_content(message.content, proc_fname, alpha)
+    try:
+        alpha = process_content(message.content, proc_fname, alpha)
+    except Exception as e:
+        print(f"Error processing message: {e}")
+        print(message.content)
 
     return alpha
 
