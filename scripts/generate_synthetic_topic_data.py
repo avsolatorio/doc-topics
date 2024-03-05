@@ -103,8 +103,13 @@ def process_content(content, proc_fname, alpha, all_topics, topic_idx):
     parsed = []
     try:
         parsed = json_parser.parse(content)
-        if parsed is None:
-            raise OutputParserException("Parser returned None")
+
+        if not isinstance(parsed, list):
+            if isinstance(parsed, dict):
+                assert "data" in parsed, "The parsed JSON object should have a 'data' key if it is a dictionary"
+                parsed = parsed["data"]
+            else:
+                raise OutputParserException(f"Parser returned {type(parsed)}")
 
         with open(proc_fname, "w") as f:
             json.dump(parsed, f, indent=2)
