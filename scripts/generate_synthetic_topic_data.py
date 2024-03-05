@@ -53,24 +53,6 @@ num_topics = 10
 num_sentences = 20
 
 
-def load_alpha():
-    alpha = np.ones(N)
-
-    for f in Path("data/synthetic_data/processed").glob("*.json"):
-        with open(f) as f:
-            data = json.load(f)
-            topic_counts = Counter([topic for pl in data for topic in pl["topics"] if topic in all_topics])
-
-            post = np.zeros(N)
-            for topic, count in topic_counts.most_common():
-                post[topic_idx[topic]] += count
-
-            post = np.abs(post - post.max())
-            alpha = alpha + post
-
-    return alpha
-
-
 def save_parse(content):
     matches = re.findall(r'\{[^{}]*\}', content)
     entities = []
@@ -82,6 +64,54 @@ def save_parse(content):
             continue
 
     return entities
+
+
+def process_content(content, proc_fname, alpha):
+    parsed = []
+    try:
+        parsed = json_parser.parse(content)
+        if parsed is None:
+            raise OutputParserException("Parser returned None")
+
+        with open(proc_fname, "w") as f:
+            json.dump(parsed, f, indent=2)
+    except OutputParserException as e:
+        try:
+            parsed = save_parse(content)
+            with open(proc_fname, "w") as f:
+                json.dump(parsed, f, indent=2)
+        except Exception as e:
+            print(f"Tried parsing failed: {e}")
+            print(content)
+    except Exception as e:
+        print(f"Error parsing message: {e}")
+        print(content)
+
+    topic_counts = Counter([topic for pl in parsed for topic in pl["topics"] if topic in all_topics])
+
+    post = np.zeros(N)
+    for topic, count in topic_counts.most_common():
+        post[topic_idx[topic]] += count
+
+    post = np.abs(post - post.max())
+    alpha = alpha + post
+
+    return alpha
+
+
+def load_alpha():
+    alpha = np.ones(N)
+
+    for f in Path("data/synthetic_data/raw").glob("*.json"):
+        proc_fname = f.parent.parent / "processed" / f.name.replace("r_", "p_")
+
+        with open(f) as f:
+            raw = json.load(f)
+
+        content = raw["content"]
+        alpha = process_content(content, proc_fname, alpha)
+
+    return alpha
 
 
 alpha = load_alpha()
@@ -118,34 +148,7 @@ def run_chain(topics, alpha):
     with open(raw_fname, "w") as f:
         f.write(message.json())
 
-    parsed = []
-    try:
-        parsed = json_parser.parse(message.content)
-        if parsed is None:
-            raise OutputParserException("Parser returned None")
-
-        with open(proc_fname, "w") as f:
-            json.dump(parsed, f, indent=2)
-    except OutputParserException as e:
-        try:
-            parsed = save_parse(message.content)
-            with open(proc_fname, "w") as f:
-                json.dump(parsed, f, indent=2)
-        except Exception as e:
-            print(f"Tried parsing failed: {e}")
-            print(message)
-    except Exception as e:
-        print(f"Error parsing message: {e}")
-        print(message)
-
-    topic_counts = Counter([topic for pl in parsed for topic in pl["topics"] if topic in all_topics])
-
-    post = np.zeros(N)
-    for topic, count in topic_counts.most_common():
-        post[topic_idx[topic]] += count
-
-    post = np.abs(post - post.max())
-    alpha = alpha + post
+    alpha = process_content(message.content, proc_fname, alpha)
 
     return alpha
 
