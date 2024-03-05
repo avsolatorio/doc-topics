@@ -16,6 +16,8 @@ tqdm = "^4.66.2"
 openai = "^1.13.3"
 langchain = "^0.1.10"
 langchain-openai = "^0.0.8"
+huggingface-cli = "^0.1"
+datasets = "^2.18.0"
 
 
 [build-system]

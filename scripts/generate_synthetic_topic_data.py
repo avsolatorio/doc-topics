@@ -11,6 +11,7 @@ from datetime import datetime
 from collections import Counter
 from tqdm.auto import tqdm
 
+from .utils import push_data_to_hub
 
 model = ChatOpenAI(
     model_name="gpt-4-0125-preview",
@@ -173,6 +174,11 @@ for i in tqdm(range(1000), desc="Running chain"):
     topics = [all_topics[i] for i in objects]
 
     alpha = run_chain(topics, alpha)
+
+    if i % 10 == 0:
+        push_data_to_hub("avsolatorio", "synthetic_data", "raw")
+        push_data_to_hub("avsolatorio", "synthetic_data", "processed")
+
 
 print("Done!")
 
