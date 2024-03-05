@@ -1,6 +1,7 @@
 import os
 import json
 import numpy as np
+from pathlib import Path
 from langchain_core.pydantic_v1 import BaseModel, Field
 from openai import OpenAI
 from langchain_core.output_parsers import JsonOutputParser
@@ -10,8 +11,9 @@ from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_openai import ChatOpenAI
-
-
+from datetime import datetime
+from collections import Counter
+from tqdm.auto import tqdm
 
 
 client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
@@ -47,16 +49,14 @@ json_parser = JsonOutputParser(pydantic_object=TopicSentence)
 # Load the World Bank topics
 
 with open("data/wb_topics.json") as f:
-    all_topics = json.load(f)["all_topics"]
+    all_topics = sorted(json.load(f)["all_topics"])
 
 # all_topics.append("Other")
+topic_idx = {topic: i for i, topic in enumerate(all_topics)}
+
 N = len(all_topics)
 alpha = np.ones(N)
 num_topics = 10
-
-instruction = ""
-
-
 num_sentences = 20
 
 prompt = PromptTemplate(
@@ -65,32 +65,49 @@ prompt = PromptTemplate(
     partial_variables={"format_instructions": json_parser.get_format_instructions(), "num_sentences": num_sentences},
 )
 
-chain = prompt | model | json_parser
-
-
-
-def send_request(topics):
+def run_chain(topics, alpha):
     topics = ";".join(topics)
+    base_dir = Path("data/synthetic_data")
 
-    response = client.chat.completions.create(
-        model="gpt-4-0125-preview",
-        messages=[
-            dict(role="system", content=instruction),
-            dict(role="user", content=topics),
-        ],
-        temperature=1,
-        max_tokens=4095,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-    )
-    output = response.model_dump()
+    chain = prompt | model
+    message = chain.invoke(dict(topics=topics))
 
-    return output
+    now = int(datetime.now().timestamp() * 1000)
+    fname = f"synthetic_data-{now}.json"
+
+    raw_fname = base_dir / "raw" / f"r_{fname}"
+    proc_fname = base_dir / "processed" / f"p_{fname}"
+
+    raw_fname.parent.mkdir(parents=True, exist_ok=True)
+    proc_fname.parent.mkdir(parents=True, exist_ok=True)
+
+    # Store the message
+    with open(raw_fname) as f:
+        f.write(message.json())
+
+    parsed = []
+    try:
+        parsed = json_parser.parse(message.content)
+        with open(proc_fname) as f:
+            json.dump(parsed, f, indent=2)
+    except Exception as e:
+        print(f"Error parsing message: {e}")
+        print(message)
+
+    topic_counts = Counter([topic for pl in parsed for topic in pl["topics"]])
+
+    post = np.zeros(N)
+    for topic, count in topic_counts.most_common():
+        post[topic_idx[topic]] += count
+
+    post = np.abs(post - post.max())
+    alpha = alpha + post
+
+    return alpha
 
 
 # Create a loop to create synthetic data
-for i in range(100):
+for i in tqdm(range(100), desc="Running chain"):
     # Choose a random number of topics
     probs = np.random.dirichlet(alpha)
     objects = np.random.choice(range(N), size=num_topics, p=probs, replace=False)
@@ -98,21 +115,11 @@ for i in range(100):
     # Choose the topics
     topics = [all_topics[i] for i in objects]
 
-    # Pass the topics to the LLM
-    output = send_request(topics)
+    alpha = run_chain(topics, alpha)
 
-    # Parse the JSON output
-    json_parser.parse(output["choices"][0]["message"]["content"])
+print("Done!")
 
-
-
-
-    # Generate a prompt
-    prompt = f"Write a brief summary of the following topics: {', '.join(topics)}"
-
-    # Generate a response
-    response = client.complete(prompt, max_tokens=100)
-
-    # Save the response
-    with open(f"data/synthetic_data/{i}.txt", "w") as f:
-        f.write(response.choices[0].text.strip())
+print("The alpha values are:", alpha)
+print("The alpha value for each topic is:")
+for i, a in enumerate(alpha):
+    print(f"{all_topics[i]}: {a}")
