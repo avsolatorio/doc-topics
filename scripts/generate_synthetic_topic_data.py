@@ -43,7 +43,8 @@ json_parser = JsonOutputParser(pydantic_object=TopicSentence)
 # Load the World Bank topics
 
 with open("data/wb_topics.json") as f:
-    all_topics = sorted(json.load(f)["all_topics"])
+    # We remove duplicates and sort the topics
+    all_topics = sorted(set(json.load(f)["all_topics"]))
 
 # all_topics.append("Other")
 topic_idx = {topic: i for i, topic in enumerate(all_topics)}
