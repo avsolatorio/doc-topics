@@ -1,0 +1,215 @@
+{
+  "all_topics": [
+    "Agriculture and Food",
+    "Food Security Update",
+    "Climate-Smart Agriculture",
+    "Livestock and Sustainability",
+    "One Health",
+    "Food System Jobs",
+    "Agribusiness and Value Chains",
+    "Climate Change",
+    "Climate-Smart Agriculture",
+    "Disaster Risk Management",
+    "Competitiveness",
+    "Competition Policy",
+    "Investment Climate",
+    "Innovation and Entrepreneurship",
+    "Debt",
+    "Debt Relief",
+    "Digital Development",
+    "Disaster Risk Management",
+    "Education",
+    "Early Childhood Development",
+    "Education and Technology",
+    "Girls' Education",
+    "Higher Education",
+    "Skills Development",
+    "Teachers",
+    "Energy",
+    "Environment",
+    "Biodiversity",
+    "Marine Plastic Pollution",
+    "Natural Capital",
+    "Oceans, Fisheries, and Coastal Economies",
+    "Pollution",
+    "Forests and Landscapes",
+    "Extractive Industries",
+    "Mining Investment and Governance Review",
+    "Gas Flaring Reduction",
+    "Financial Inclusion",
+    "Payment Systems",
+    "Credit Infrastructure",
+    "Small and Medium Enterprises Finance",
+    "Financial Sector",
+    "Financial Stability",
+    "Financial Integrity",
+    "Long-Term Finance",
+    "Fragility, Conflict, and Violence",
+    "Gender",
+    "Governance",
+    "Procurement for Development",
+    "Health",
+    "Infectious diseases and Vaccines",
+    "Nutrition",
+    "COVID-19 Hub",
+    "Pandemic Preparedness and COVID-19",
+    "Universal Health Coverage",
+    "Global Financing Facility for Women, Children and Adolescents",
+    "Inequality and Shared Prosperity",
+    "Infrastructure",
+    "Jobs & Development",
+    "Labor Markets",
+    "Skills Development",
+    "Social Protection",
+    "Macroeconomics",
+    "Taxes and Government Revenue",
+    "Migration",
+    "Nutrition",
+    "Poverty",
+    "Inequality and Shared Prosperity",
+    "Measuring Poverty",
+    "Regional Integration",
+    "Social Sustainability and Inclusion",
+    "Community-Driven Development",
+    "Disability Inclusion",
+    "Indigenous Peoples",
+    "Sexual Orientation and Gender Identity",
+    "Social Inclusion",
+    "Sustainable Communities",
+    "Social Protection",
+    "Jobs and Development",
+    "Pensions",
+    "Safety Nets and Cash Transfers",
+    "Skills Development",
+    "Sustainable Infrastructure Finance",
+    "Trade",
+    "Trade Facilitation and Logistics",
+    "Global Value Chains",
+    "Transport",
+    "Urban Development",
+    "Disaster Risk Management",
+    "Inclusive Cities",
+    "Land",
+    "Water",
+    "Sanitation",
+    "Water in Agriculture",
+    "Water Resources Management",
+    "Water Supply"
+  ],
+  "topic_list": {
+    "Agriculture and Food": [
+      "Food Security Update",
+      "Climate-Smart Agriculture",
+      "Livestock and Sustainability",
+      "One Health",
+      "Food System Jobs",
+      "Agribusiness and Value Chains"
+    ],
+    "Climate Change": [
+      "Climate-Smart Agriculture",
+      "Disaster Risk Management"
+    ],
+    "Competitiveness": [
+      "Competition Policy",
+      "Investment Climate",
+      "Innovation and Entrepreneurship"
+    ],
+    "Debt": [
+      "Debt Relief"
+    ],
+    "Digital Development": [],
+    "Disaster Risk Management": [],
+    "Education": [
+      "Early Childhood Development",
+      "Education and Technology",
+      "Girls' Education",
+      "Higher Education",
+      "Skills Development",
+      "Teachers"
+    ],
+    "Energy": [],
+    "Environment": [
+      "Biodiversity",
+      "Marine Plastic Pollution",
+      "Natural Capital",
+      "Oceans, Fisheries, and Coastal Economies",
+      "Pollution",
+      "Forests and Landscapes"
+    ],
+    "Extractive Industries": [
+      "Mining Investment and Governance Review",
+      "Gas Flaring Reduction"
+    ],
+    "Financial Inclusion": [
+      "Payment Systems",
+      "Credit Infrastructure",
+      "Small and Medium Enterprises Finance"
+    ],
+    "Financial Sector": [
+      "Financial Stability",
+      "Financial Integrity",
+      "Long-Term Finance"
+    ],
+    "Fragility, Conflict, and Violence": [],
+    "Gender": [],
+    "Governance": [
+      "Procurement for Development"
+    ],
+    "Health": [
+      "Infectious diseases and Vaccines",
+      "Nutrition",
+      "COVID-19 Hub",
+      "Pandemic Preparedness and COVID-19",
+      "Universal Health Coverage",
+      "Global Financing Facility for Women, Children and Adolescents"
+    ],
+    "Inequality and Shared Prosperity": [],
+    "Infrastructure": [],
+    "Jobs & Development": [
+      "Labor Markets",
+      "Skills Development",
+      "Social Protection"
+    ],
+    "Macroeconomics": [
+      "Taxes and Government Revenue"
+    ],
+    "Migration": [],
+    "Nutrition": [],
+    "Poverty": [
+      "Inequality and Shared Prosperity",
+      "Measuring Poverty"
+    ],
+    "Regional Integration": [],
+    "Social Sustainability and Inclusion": [
+      "Community-Driven Development",
+      "Disability Inclusion",
+      "Indigenous Peoples",
+      "Sexual Orientation and Gender Identity",
+      "Social Inclusion",
+      "Sustainable Communities"
+    ],
+    "Social Protection": [
+      "Jobs and Development",
+      "Pensions",
+      "Safety Nets and Cash Transfers",
+      "Skills Development"
+    ],
+    "Sustainable Infrastructure Finance": [],
+    "Trade": [
+      "Trade Facilitation and Logistics",
+      "Global Value Chains"
+    ],
+    "Transport": [],
+    "Urban Development": [
+      "Disaster Risk Management",
+      "Inclusive Cities",
+      "Land"
+    ],
+    "Water": [
+      "Sanitation",
+      "Water in Agriculture",
+      "Water Resources Management",
+      "Water Supply"
+    ]
+  }
+}
