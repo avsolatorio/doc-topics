@@ -8,6 +8,11 @@ packages = [{include = "doc_topics"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+pandas = "^2.2.1"
+bs4 = "^0.0.2"
+requests = "^2.31.0"
+fire = "^0.5.0"
+tqdm = "^4.66.2"
 
 
 [build-system]
