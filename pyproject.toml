@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "doc-topics"
+version = "0.1.0"
+description = ""
+authors = ["Aivin V. Solatorio <avsolatorio@gmail.com>"]
+readme = "README.md"
+packages = [{include = "doc_topics"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
