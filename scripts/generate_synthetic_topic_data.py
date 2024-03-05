@@ -160,11 +160,14 @@ def run_chain(topics, alpha):
 
 # Create a loop to create synthetic data
 for i in tqdm(range(1000), desc="Running chain"):
-    # Choose a random number of topics
+    # Choose a random number of topics to ensure diversity in topic combinations
     # probs = np.random.dirichlet(alpha)
-    # probs = alpha / alpha.sum()  # Normalize
-    # objects = np.random.choice(range(N), size=num_topics, p=probs, replace=False)
-    objects = np.argsort(alpha)[-num_topics:]  # Choose the topics with the highest alpha values as these are the most underrepresented
+    probs = alpha / alpha.sum()  # Normalize
+    objects = np.random.choice(range(N), size=num_topics, p=probs, replace=False)
+
+    # DO NOT USE THIS LINE unless you want to use the most underrepresented topics
+    # This could bias the data?
+    # objects = np.argsort(alpha)[-num_topics:]  # Choose the topics with the highest alpha values as these are the most underrepresented
 
     # Choose the topics
     topics = [all_topics[i] for i in objects]
