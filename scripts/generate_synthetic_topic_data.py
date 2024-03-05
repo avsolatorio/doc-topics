@@ -47,9 +47,35 @@ with open("data/wb_topics.json") as f:
 topic_idx = {topic: i for i, topic in enumerate(all_topics)}
 
 N = len(all_topics)
-alpha = np.ones(N)
 num_topics = 10
 num_sentences = 20
+
+
+def load_alpha():
+    alpha = np.ones(N)
+
+    for f in Path("data/synthetic_data/processed").glob("*.json"):
+        with open(f) as f:
+            data = json.load(f)
+            topic_counts = Counter([topic for pl in data for topic in pl["topics"] if topic in all_topics])
+
+            post = np.zeros(N)
+            for topic, count in topic_counts.most_common():
+                post[topic_idx[topic]] += count
+
+            post = np.abs(post - post.max())
+            alpha = alpha + post
+
+    return alpha
+
+
+alpha = load_alpha()
+
+print("The alpha values are:", alpha)
+print("The alpha value for each topic is:")
+for i, a in enumerate(alpha):
+    print(f"{all_topics[i]}: {a}")
+
 
 prompt = PromptTemplate(
     template="""Generate {num_sentences} sentences that can be classified to contain the topics provided. Try not to use the exact names of the topics in the sentences. Each sentence can contain one or more topics. Ensure the topics are sampled uniformly. Sentences should range from simple to complex.\n\n{format_instructions}\n\nTopics: {topics}""",
