@@ -1,12 +1,6 @@
-import os
 import json
 import numpy as np
 from pathlib import Path
-from langchain_core.pydantic_v1 import BaseModel, Field
-from openai import OpenAI
-from langchain_core.output_parsers import JsonOutputParser
-from typing import List
-
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.pydantic_v1 import BaseModel, Field
@@ -15,8 +9,6 @@ from datetime import datetime
 from collections import Counter
 from tqdm.auto import tqdm
 
-
-client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
 model = ChatOpenAI(
     model_name="gpt-4-0125-preview",
