@@ -1,8 +1,10 @@
+import re
 import json
 import numpy as np
 from pathlib import Path
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.exceptions import OutputParserException
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_openai import ChatOpenAI
 from datetime import datetime
@@ -69,6 +71,19 @@ def load_alpha():
     return alpha
 
 
+def save_parse(content):
+    matches = re.findall(r'\{[^{}]*\}', content)
+    entities = []
+
+    for match in matches:
+        try:
+            entities.append(json.loads(match))
+        except json.JSONDecodeError:
+            continue
+
+    return entities
+
+
 alpha = load_alpha()
 
 print("The alpha values are:", alpha)
@@ -106,8 +121,19 @@ def run_chain(topics, alpha):
     parsed = []
     try:
         parsed = json_parser.parse(message.content)
+        if parsed is None:
+            raise OutputParserException("Parser returned None")
+
         with open(proc_fname, "w") as f:
             json.dump(parsed, f, indent=2)
+    except OutputParserException as e:
+        try:
+            parsed = save_parse(message.content)
+            with open(proc_fname, "w") as f:
+                json.dump(parsed, f, indent=2)
+        except Exception as e:
+            print(f"Tried parsing failed: {e}")
+            print(message)
     except Exception as e:
         print(f"Error parsing message: {e}")
         print(message)
