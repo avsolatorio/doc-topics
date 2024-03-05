@@ -112,7 +112,7 @@ def run_chain(topics, alpha):
         print(f"Error parsing message: {e}")
         print(message)
 
-    topic_counts = Counter([topic for pl in parsed for topic in pl["topics"]])
+    topic_counts = Counter([topic for pl in parsed for topic in pl["topics"] if topic in all_topics])
 
     post = np.zeros(N)
     for topic, count in topic_counts.most_common():
