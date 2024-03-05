@@ -74,13 +74,13 @@ def run_chain(topics, alpha):
     proc_fname.parent.mkdir(parents=True, exist_ok=True)
 
     # Store the message
-    with open(raw_fname) as f:
+    with open(raw_fname, "w") as f:
         f.write(message.json())
 
     parsed = []
     try:
         parsed = json_parser.parse(message.content)
-        with open(proc_fname) as f:
+        with open(proc_fname, "w") as f:
             json.dump(parsed, f, indent=2)
     except Exception as e:
         print(f"Error parsing message: {e}")
