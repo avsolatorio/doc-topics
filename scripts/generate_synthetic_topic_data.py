@@ -159,7 +159,7 @@ def run_chain(topics, alpha):
 
 
 # Create a loop to create synthetic data
-for i in tqdm(range(100), desc="Running chain"):
+for i in tqdm(range(1000), desc="Running chain"):
     # Choose a random number of topics
     probs = np.random.dirichlet(alpha)
     objects = np.random.choice(range(N), size=num_topics, p=probs, replace=False)
