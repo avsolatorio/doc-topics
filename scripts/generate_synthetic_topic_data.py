@@ -124,7 +124,7 @@ for i, a in enumerate(alpha):
 
 
 prompt = PromptTemplate(
-    template="""Generate {num_sentences} sentences that can be classified to contain the topics provided. Try not to use the exact names of the topics in the sentences. Each sentence can contain one or more topics. Ensure the topics are sampled uniformly. Sentences should range from simple to complex.\n\n{format_instructions}\n\nTopics: {topics}""",
+    template="""Generate {num_sentences} sentences that can be classified to contain the topics provided. Try not to use the exact names of the topics in the sentences. Each sentence can contain one or more topics. Sentences should range from simple to complex.\n\n{format_instructions}\n\nTopics: {topics}""",
     input_variables=["topics"],
     partial_variables={"format_instructions": json_parser.get_format_instructions(), "num_sentences": num_sentences},
 )
