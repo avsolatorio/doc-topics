@@ -7,6 +7,7 @@ from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.exceptions import OutputParserException
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from datetime import datetime
 from collections import Counter
 from tqdm.auto import tqdm
@@ -15,15 +16,26 @@ import fire
 from .utils import push_data_to_hub
 
 
-## START: Set up the LLM dependencies
-model = ChatOpenAI(
-    model_name="gpt-4-0125-preview",
+# ## START: Set up the LLM dependencies
+# model = ChatOpenAI(
+#     model_name="gpt-4-0125-preview",
+#     temperature=1,
+#     max_tokens=4095,
+#     model_kwargs=dict(
+#         top_p=1,
+#         frequency_penalty=0,
+#         presence_penalty=0,
+#     ),
+# )
+
+model = ChatGroq(
+    model_name="llama3-70b-8192",
     temperature=1,
     max_tokens=4095,
     model_kwargs=dict(
         top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0,
+        # frequency_penalty=0,
+        # presence_penalty=0,
     ),
 )
 
@@ -62,8 +74,8 @@ def run_chain(topics, alpha, prompt, model, all_topics, topic_idx):
     now = int(datetime.now().timestamp() * 1000)
     fname = f"synthetic_data-{now}.json"
 
-    raw_fname = base_dir / "raw" / f"r_{fname}"
-    proc_fname = base_dir / "processed" / f"p_{fname}"
+    raw_fname = base_dir / "raw" / model.model_name / f"r_{fname}"
+    proc_fname = base_dir / "processed" / model.model_name / f"p_{fname}"
 
     raw_fname.parent.mkdir(parents=True, exist_ok=True)
     proc_fname.parent.mkdir(parents=True, exist_ok=True)
@@ -145,8 +157,8 @@ def process_content(content, proc_fname, alpha, all_topics, topic_idx):
 def load_alpha(all_topics, topic_idx):
     alpha = np.ones(len(all_topics))
 
-    for f in Path("data/synthetic_data/raw").glob("*.json"):
-        proc_fname = f.parent.parent / "processed" / f.name.replace("r_", "p_")
+    for f in Path("data/synthetic_data/raw").glob("*/*.json"):
+        proc_fname = f.parent.parent.parent / "processed" / f.parent.name / f.name.replace("r_", "p_")
 
         with open(f) as f:
             raw = json.load(f)
