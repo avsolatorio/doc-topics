@@ -166,7 +166,7 @@ def process_content(content, proc_fname):
 ## END: Define some functions
 
 
-def main(data_group: str, fname: str, rerun: bool = False):
+def generate(data_group: str, fname: str, rerun: bool = False):
     """
     data_group: Example: dhs, wdi, etc.
     fname: path to the file containing the idno and definition fields.
@@ -184,6 +184,38 @@ def main(data_group: str, fname: str, rerun: bool = False):
 
     print("Done!")
 
+
+def main(mode: str, data_group: str, fname: str, rerun: bool = False):
+    if mode == "generate":
+        generate(data_group, fname, rerun=rerun)
+    elif mode == "compile":
+        base_dir = Path(f"data/keywords/{data_group}")
+        proc_dir = base_dir / "processed" / model.model_name
+
+        max_keys = 0
+        idno_keywords = {}
+
+        for key_file in tqdm(sorted(proc_dir.glob("p_*.json"))):
+            idno = key_file.name.lstrip("p_").split("-")[0]
+
+            with open(key_file) as f:
+                content = json.load(f)
+                idno_keywords[idno] = {f"kwd{i:02}": k for i, k in enumerate(sorted(content["keywords"]), 1)}
+                if max_keys < len(content["keywords"]):
+                    max_keys = len(content["keywords"])
+
+        keys_df = pd.DataFrame(idno_keywords).T
+        keys_df.index.name = "idno"
+        keys_df.reset_index(inplace=True)
+
+        data = pd.read_csv(fname)
+
+        out = data.merge(keys_df, on="idno", how="left")
+
+        out.to_csv(base_dir / f"{data_group}_keywords_{model.model_name}.csv", index=None)
+
 if __name__ == "__main__":
     # poetry run python -m scripts.generate_keywords --data_group=dhs --fname=~/Downloads/dhs_indic_csv.csv
+
+    # poetry run python -m scripts.generate_keywords --mode=compile --data_group=dhs --fname=~/Downloads/dhs_indic_csv.csv
     fire.Fire(main)
