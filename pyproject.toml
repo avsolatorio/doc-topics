@@ -26,6 +26,7 @@ accelerate = "^0.34.2"
 sentencepiece = "^0.2.0"
 protobuf = "^5.28.1"
 scikit-learn = "^1.5.2"
+nltk = "^3.9.1"
 
 
 [tool.poetry.group.dev.dependencies]
